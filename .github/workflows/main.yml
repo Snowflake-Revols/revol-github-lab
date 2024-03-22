@@ -2,12 +2,13 @@ name: deploy static website to AWS-S3
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'dev'
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Only run for the default branch
-    if: github.ref_name == github.event.repository.default_branch
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -19,6 +20,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Deploy to AWS S3
+      - name: Deploy to AWS S3 production
+        # Only run for the default branch
+        if: github.ref_name == 'refs/heads/master'
         run: |
           aws s3 sync . s3://revol-github-lab --delete
+
+      - name: Deploy to AWS S3 development
+        # Only run for the default branch
+        if: github.ref_name == 'refs/heads/dev'
+        run: |
+          aws s3 sync . s3://revol-github-lab-dev --delete
