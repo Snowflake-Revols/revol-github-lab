@@ -22,12 +22,12 @@ jobs:
 
       - name: Deploy to AWS S3 production
         # Only run for the default branch
-        if: github.ref_name == 'refs/heads/master'
+        if: github.ref_name == 'master'
         run: |
           aws s3 sync . s3://revol-github-lab --delete
 
       - name: Deploy to AWS S3 development
         # Only run for the default branch
-        if: github.ref_name == 'refs/heads/dev'
+        if: github.ref_name == 'dev'
         run: |
           aws s3 sync . s3://revol-github-lab-dev --delete
